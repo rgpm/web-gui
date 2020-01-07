@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -24,7 +24,7 @@ const defaultPRML = {
   "properties": { }
 }
 
-const useStyles = theme => ({
+const useStyles = makeStyles(theme => ({
   dialogTitle: {
     marginLeft: theme.spacing(2),
     flex: 1,
@@ -32,85 +32,82 @@ const useStyles = theme => ({
   dialogAppBar: {
     position: 'relative',
   },
-});
+}));
 
-class ServiceRecordList extends React.Component {
-  constructor() {
-    super();
+
+
+export default function ServiceRecordList(props) {
+
+  function handleDialogOnClose() {
+    props.closeHandler();
   }
 
-  handleDialogOnClose() {
-    this.props.closeHandler();
-  }
+  const [name, setName] = React.useState("");
+  const [locator, setLocator] = React.useState("");
+  const [identifier, setIdentifier] = React.useState("");
 
-  async handleSaveButtonOnClick() {
+  function handleSaveButtonOnClick() {
     const rgpm = new rgpmlib();
-    const new_record = await rgpm.createRecord(
-      this.state.name,
-      this.state.locator,
-      this.state.identifier,
+    rgpm.createRecord(
+      name,
+      locator,
+      identifier,
       "master password????",
       defaultPRML
-    );
-    this.props.onListUpdate();
-    this.handleDialogOnClose();
+    ).then((new_record) => {
+      props.onListUpdate();
+      handleDialogOnClose();
+    });
   }
 
-  handleTextFieldUpdate(name, event) {
-    this.setState({[name] : event.target.value});
-  }
-
-  render() {
-    const { classes } = this.props;
-    return (
-      <Dialog fullScreen open={this.props.open} onClose={this.handleDialogOnClose.bind(this)}>
-        <AppBar className={classes.dialogAppBar}>
-          <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={this.handleDialogOnClose.bind(this)} aria-label="close">
-              <CloseIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.dialogTitle}>
-              Add Service Record
-            </Typography>
-            <Button autoFocus color="inherit" onClick={this.handleSaveButtonOnClick.bind(this)}>
-              Save
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <div>
-          <Paper> 
-            <ExpansionPanel expanded>
-              <ExpansionPanelSummary            
-                id="basic-info"
-              >
-                <Typography>Basic Info</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Grid container direction="column">
-                  <TextField label="Name" onChange={(event) => this.handleTextFieldUpdate("name", event)} />
-                  <TextField label="Locator"onChange={(event) => this.handleTextFieldUpdate("locator", event)}/>
-                  <TextField label="Identifier" onChange={(event) => this.handleTextFieldUpdate("identifier", event)}/>
-                </Grid>
-                
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel disabled>
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                id="basic-info"
-              >
-                <Typography>Password Requirement Description</Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <Typography>Feature not available yet</Typography>                      
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-          </Paper>
-        </div>
-      </Dialog>
-    );
-  }
+  
+  const classes = useStyles();
+    
+  return (
+    <Dialog fullScreen open={props.open} onClose={handleDialogOnClose}>
+      <AppBar className={classes.dialogAppBar}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={handleDialogOnClose} aria-label="close">
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.dialogTitle}>
+            Add Service Record
+          </Typography>
+          <Button autoFocus color="inherit" onClick={handleSaveButtonOnClick}>
+            Save
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <div>
+        <Paper> 
+          <ExpansionPanel expanded>
+            <ExpansionPanelSummary            
+              id="basic-info"
+            >
+              <Typography>Basic Info</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Grid container direction="column">
+                <TextField label="Name" onChange={(event) => setName(event.target.value)} />
+                <TextField label="Locator"onChange={(event) => setLocator(event.target.value)}/>
+                <TextField label="Identifier" onChange={(event) => setIdentifier(event.target.value)}/>
+              </Grid>
+              
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+          <ExpansionPanel disabled>
+            <ExpansionPanelSummary
+              expandIcon={<ExpandMoreIcon />}
+              id="basic-info"
+            >
+              <Typography>Password Requirement Description</Typography>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails>
+              <Typography>Feature not available yet</Typography>                      
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        </Paper>
+      </div>
+    </Dialog>
+  );
 }
-
-
-export default withStyles(useStyles)(ServiceRecordList);
