@@ -20,9 +20,7 @@ export default function ServiceRecordList(props) {
       return (<Typography>Add a new record using the Add Button!</Typography>);
     } else {
       return record_uuids.map((record_uuid) => {
-        console.log(record_uuid);
         const record = rgpm.readRecord(record_uuid);
-        console.log(record);
         return (
         <ListItem
           onClick={event => handleListItemClick(event, record.uuid)}
@@ -51,15 +49,22 @@ export default function ServiceRecordList(props) {
     props.onPasswordSelection(uuid);
   }
 
-  return (
-    <div>
-      <Paper>
-        <List dense={false}>
-          {
-            getServiceRecords()
-          }
-        </List>
-      </Paper>
-    </div>
-  );
+  if(props.record_uuids.length !== 0) {
+    return (
+      <div>
+        <Paper>
+          <List dense={false}>
+            {
+              getServiceRecords()
+            }
+          </List>
+        </Paper>
+      </div>
+    );
+  } else {
+    return (
+    <Paper>
+      <Typography>Use the add button below to get started!</Typography>
+    </Paper>);
+  }
 }

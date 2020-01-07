@@ -8,6 +8,7 @@ import ServiceRecordList from './components/ServiceRecordList';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import ServiceRecordAddDialog from './components/ServiceRecordAddDialog';
+import MasterPasswordInput from './components/MasterPasswordInput';
 
 const rgpmlib = require("@rgpm/core/src/rgpm");
 
@@ -32,9 +33,13 @@ export default function App() {
   const [completed, setCompleted] = React.useState({});
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
   const [record_uuids, setRecordUUIDS] = React.useState(rgpm.listRecords()["records"]);
+  const [current_record_uuid, setCurrentRecordUUID] = React.useState(null);
+  const [current_gen_pass, setCurrentGenPass] = React.useState("");
 
   function handleNext(uuid) {
-    setActiveStep((this.state.activeStep + 1) % this.getSteps().length);
+    setActiveStep((activeStep + 1) % getSteps().length);
+    setCurrentRecordUUID(uuid);
+
   }
 
   function handleDialogOnClose() {
@@ -51,11 +56,20 @@ export default function App() {
   };
 
   function getSteps() {
-    return ['Show All Passwords', 'Enter Master Password', 'Generated Password'];
+    const step2 = "Enter Master Password" + (current_record_uuid === null ? "" : " for " + rgpm.readRecord(current_record_uuid).name);
+    return ['Show All Passwords', step2, 'Generated Password'];
   }
 
   function updateRecords() {
     setRecordUUIDS(rgpm.listRecords()["records"]);
+    setCurrentRecordUUID(null);
+  }
+
+  function generatePassword(password) {
+    rgpm.genPass(rgpm.readRecord(current_record_uuid), password).then((gen_pass) => {
+      setCurrentGenPass(gen_pass);
+      handleStep(2);
+    });
   }
 
   const classes = useStyles();
@@ -82,11 +96,10 @@ export default function App() {
             <ServiceRecordAddDialog onListUpdate={updateRecords} open={addDialogOpen} closeHandler={handleDialogOnClose} />
           </div> 
           : 
-          activeStep === 1 ? <Typography>Master Password Entry</Typography> :
-          activeStep === 2 ? <Typography>Password Display</Typography> : <Typography>Unknown</Typography>
+          activeStep === 1 ? <div><MasterPasswordInput onPasswordConfirmation={(password) => generatePassword(password)}/></div> :
+          activeStep === 2 ? <Typography>Generated Password: {current_gen_pass}</Typography> : <Typography>Unknown</Typography>
         }
       </div>
     </div>
   );
-
 }

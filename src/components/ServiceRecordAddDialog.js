@@ -52,6 +52,7 @@ export default function ServiceRecordList(props) {
       name,
       locator,
       identifier,
+      10,
       "master password????",
       defaultPRML
     ).then((new_record) => {
