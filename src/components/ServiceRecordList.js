@@ -10,31 +10,22 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 const rgpmlib = require("@rgpm/core/src/rgpm");
 
-class ServiceRecordList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.rgpm = new rgpmlib();
-    this.state = {
-      record_uuids : props.record_uuids
-    };
-  }
 
-  componentDidUpdate(prevProps) {
-    this.setState({record_uuids : this.props.record_uuids});
-  }
+export default function ServiceRecordList(props) {
+  const rgpm = new rgpmlib();
 
-  getServiceRecords() {
-    const record_uuids = this.state.record_uuids;
+  function getServiceRecords() {
+    const record_uuids = props.record_uuids;
     if(record_uuids === null) {
       return (<Typography>Add a new record using the Add Button!</Typography>);
     } else {
       return record_uuids.map((record_uuid) => {
         console.log(record_uuid);
-        const record = this.rgpm.readRecord(record_uuid);
+        const record = rgpm.readRecord(record_uuid);
         console.log(record);
         return (
         <ListItem
-          onClick={event => this.handleListItemClick(event, record.uuid)}
+          onClick={event => handleListItemClick(event, record.uuid)}
           key = {record.uuid}
         >
           <ListItemText
@@ -42,7 +33,7 @@ class ServiceRecordList extends React.Component {
             secondary={record.identifier}
           />
           <ListItemSecondaryAction>
-            <IconButton edge="end" aria-label="forward" onClick={event => this.handleDeleteIconClick(event, record.uuid)}>
+            <IconButton edge="end" aria-label="forward" onClick={event => handleDeleteIconClick(event, record.uuid)}>
               <DeleteIcon />
             </IconButton>
           </ListItemSecondaryAction>
@@ -51,28 +42,24 @@ class ServiceRecordList extends React.Component {
     }
   }
 
-  handleDeleteIconClick(event, uuid) {
-    this.rgpm.deleteRecord(uuid);
-    this.props.onListUpdate();
+  function handleDeleteIconClick(event, uuid) {
+    rgpm.deleteRecord(uuid);
+    props.onListUpdate();
   }
 
-  handleListItemClick(event, uuid) {
-    this.props.onPasswordSelection(uuid);
+  function handleListItemClick(event, uuid) {
+    props.onPasswordSelection(uuid);
   }
 
-  render() {
-    return (
-      <div>
-        <Paper>
-          <List dense={false}>
-            {
-              this.getServiceRecords()
-            }
-          </List>
-        </Paper>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Paper>
+        <List dense={false}>
+          {
+            getServiceRecords()
+          }
+        </List>
+      </Paper>
+    </div>
+  );
 }
-
-export default ServiceRecordList;
