@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
@@ -11,7 +11,7 @@ import ServiceRecordAddDialog from './components/ServiceRecordAddDialog';
 
 const rgpmlib = require("@rgpm/core/src/rgpm");
 
-const useStyles = theme => ({
+const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
   },
@@ -23,83 +23,70 @@ const useStyles = theme => ({
     bottom: theme.spacing(2),
     right: theme.spacing(2),
   }
-});
+}));
 
-class App extends React.Component {
+export default function App() {
 
-  constructor() {
-    super();
-    this.rgpm = new rgpmlib();
-    this.state = {
-      activeStep: 0,
-      completed: {},
-      addDialogOpen: false,
-      record_uuids: this.rgpm.listRecords()["records"]
-    };
+  const rgpm = new rgpmlib();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [completed, setCompleted] = React.useState({});
+  const [addDialogOpen, setAddDialogOpen] = React.useState(false);
+  const [record_uuids, setRecordUUIDS] = React.useState(rgpm.listRecords()["records"]);
+
+  function handleNext(uuid) {
+    setActiveStep((this.state.activeStep + 1) % this.getSteps().length);
   }
 
-  handleNext(uuid) {
-    this.setState({activeStep: ((this.state.activeStep + 1) % this.getSteps().length)});
+  function handleDialogOnClose() {
+    setAddDialogOpen(false);
   }
 
-  handleBack() {
-    this.setState({activeStep: (prevActiveStep => prevActiveStep - 1)});
+  function handleAddButtonOnClick() {
+    setAddDialogOpen(true);
+    updateRecords();
   }
 
-  handleDialogOnClose() {
-    this.setState({addDialogOpen: false});
-  }
-
-  handleAddButtonOnClick() {
-    this.setState({addDialogOpen: true});
-    this.updateRecords();
-  }
-
-  handleStep = step => () => {
-    this.setState({activeStep: step});
+  function handleStep(step) {
+    setActiveStep(step);
   };
 
-  getSteps() {
+  function getSteps() {
     return ['Show All Passwords', 'Enter Master Password', 'Generated Password'];
   }
 
-  updateRecords() {
-    this.setState({record_uuids: this.rgpm.listRecords()["records"]});
+  function updateRecords() {
+    setRecordUUIDS(rgpm.listRecords()["records"]);
   }
 
-  render() {
-    const steps = this.getSteps();
-    const { classes } = this.props;
-    return (
-      <div className={classes.root}>
-        <Stepper nonLinear activeStep={this.state.activeStep}>
-          {steps.map((label, index) => (
-            <Step key={label}>
-              <StepButton onClick={this.handleStep(index)} completed={this.state.completed[index]}>
-                {label}
-              </StepButton>
-            </Step>
-          ))}
-        </Stepper>
-        <div>
-          {
-            this.state.activeStep === 0 ? 
-            <div>
-              <ServiceRecordList record_uuids={this.state.record_uuids} onPasswordSelection={(uuid) => this.handleNext(uuid)} onListUpdate={this.updateRecords.bind(this)}/>
-              <Fab color="primary" aria-label="add" className={classes.fab} onClick={() => this.handleAddButtonOnClick()}> 
-                <AddIcon />
-              </Fab>
-              <ServiceRecordAddDialog onListUpdate={this.updateRecords.bind(this)} open={this.state.addDialogOpen} closeHandler={() => this.handleDialogOnClose()} />
-            </div> 
-            : 
-            this.state.activeStep === 1 ? <Typography>Master Password Entry</Typography> :
-            this.state.activeStep === 2 ? <Typography>Password Display</Typography> : <Typography>Unknown</Typography>
-          }
-        </div>
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root}>
+      <Stepper nonLinear activeStep={activeStep}>
+        {getSteps().map((label, index) => (
+          <Step key={label}>
+            <StepButton onClick={() => handleStep(index)} completed={completed[index]}>
+              {label}
+            </StepButton>
+          </Step>
+        ))}
+      </Stepper>
+      <div>
+        {
+          activeStep === 0 ? 
+          <div>
+            <ServiceRecordList record_uuids={record_uuids} onPasswordSelection={(uuid) => handleNext(uuid)} onListUpdate={updateRecords}/>
+            <Fab color="primary" aria-label="add" className={classes.fab} onClick={handleAddButtonOnClick}> 
+              <AddIcon />
+            </Fab>
+            <ServiceRecordAddDialog onListUpdate={updateRecords} open={addDialogOpen} closeHandler={handleDialogOnClose} />
+          </div> 
+          : 
+          activeStep === 1 ? <Typography>Master Password Entry</Typography> :
+          activeStep === 2 ? <Typography>Password Display</Typography> : <Typography>Unknown</Typography>
+        }
       </div>
-    );
-  }
+    </div>
+  );
+
 }
-
-
-export default withStyles(useStyles)(App);
