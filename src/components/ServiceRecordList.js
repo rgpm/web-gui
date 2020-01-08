@@ -5,11 +5,25 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import { Typography } from '@material-ui/core';
+import { Typography, makeStyles, Grid } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 const rgpmlib = require("@rgpm/core/src/rgpm");
 
+const useStyles = makeStyles(theme => ({
+  infoMessage: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  infoIcon: {
+    fontSize: '60px'
+  },
+  grid: {
+    minHeight: '60vh'
+  }
+}));
 
 export default function ServiceRecordList(props) {
   const rgpm = new rgpmlib();
@@ -49,7 +63,9 @@ export default function ServiceRecordList(props) {
     props.onPasswordSelection(uuid);
   }
 
-  if(props.record_uuids.length !== 0) {
+  const classes = useStyles();
+
+  if(props.record_uuids !== null) {
     return (
       <div>
         <Paper>
@@ -63,8 +79,16 @@ export default function ServiceRecordList(props) {
     );
   } else {
     return (
-    <Paper>
-      <Typography>Use the add button below to get started!</Typography>
-    </Paper>);
+    <Grid
+      container
+      direction="column"
+      justify="center"
+      alignItems="center"
+      className={classes.grid}
+    >
+      <HelpOutlineIcon className={classes.infoIcon}/>
+      <Typography className={classes.infoMessage}>Use the add button below to get started!</Typography>
+    </Grid>
+    );
   }
 }

@@ -12,5 +12,12 @@
 # limitations under the License.
 # [START app_yaml]
 env: flex
-runtime: nodejs
+runtime: custom
+
+handlers:
+- url: /*
+    secure: always
+    redirect_http_response_code: 301
+    script: auto
+
 # [END app_yaml]

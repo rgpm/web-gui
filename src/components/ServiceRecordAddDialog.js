@@ -6,9 +6,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import { Dialog, Toolbar, IconButton, Button, TextField, Grid } from '@material-ui/core';
+import { Dialog, Toolbar, IconButton, Button, TextField, Grid, Slider } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AppBar from '@material-ui/core/AppBar';
+import MasterPasswordInput from './MasterPasswordInput';
 
 const rgpmlib = require("@rgpm/core/src/rgpm");
 
@@ -32,6 +33,9 @@ const useStyles = makeStyles(theme => ({
   dialogAppBar: {
     position: 'relative',
   },
+  dialogPaper: {
+    padding: theme.spacing(2)
+  }
 }));
 
 
@@ -45,22 +49,38 @@ export default function ServiceRecordList(props) {
   const [name, setName] = React.useState("");
   const [locator, setLocator] = React.useState("");
   const [identifier, setIdentifier] = React.useState("");
+  const [iter_t, setIterT] = React.useState(30);
+  const [passwordDialogOpen, setPasswordDialogOpen] = React.useState(false);
 
   function handleSaveButtonOnClick() {
+    setPasswordDialogOpen(true);
+  }
+
+  function handleOnPasswordConfirmation(password) {
     const rgpm = new rgpmlib();
     rgpm.createRecord(
       name,
       locator,
       identifier,
-      10,
+      iter_t,
       "master password????",
       defaultPRML
     ).then((new_record) => {
+      console.log(new_record);
       props.onListUpdate();
+      setPasswordDialogOpen(false);
       handleDialogOnClose();
     });
   }
 
+
+  function handleSliderOnChange(event, newValue) {
+    setIterT(newValue);
+  }
+
+  function handlePasswordDialogOnClose() {
+    setPasswordDialogOpen(false);
+  }
   
   const classes = useStyles();
     
@@ -79,7 +99,6 @@ export default function ServiceRecordList(props) {
           </Button>
         </Toolbar>
       </AppBar>
-      <div>
         <Paper> 
           <ExpansionPanel expanded>
             <ExpansionPanelSummary            
@@ -92,8 +111,21 @@ export default function ServiceRecordList(props) {
                 <TextField label="Name" onChange={(event) => setName(event.target.value)} />
                 <TextField label="Locator"onChange={(event) => setLocator(event.target.value)}/>
                 <TextField label="Identifier" onChange={(event) => setIdentifier(event.target.value)}/>
+                <div>
+                  <br/>
+                  <Typography>Iteration Count:</Typography>
+                  <Slider
+                    defaultValue={iter_t}
+                    label="asdf"
+                    onChange={(event, newValue) => handleSliderOnChange(event, newValue)}
+                    valueLabelDisplay="auto"
+                    step={10}
+                    marks
+                    min={10}
+                    max={100}
+                  />
+                </div>
               </Grid>
-              
             </ExpansionPanelDetails>
           </ExpansionPanel>
           <ExpansionPanel disabled>
@@ -108,7 +140,13 @@ export default function ServiceRecordList(props) {
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </Paper>
-      </div>
+        <Dialog open={passwordDialogOpen} onClose={handlePasswordDialogOnClose}>
+          <Paper className={classes.dialogPaper}>
+            <Typography>Enter your master password to initialize the new record</Typography>
+            <br/>
+            <MasterPasswordInput onPasswordConfirmation={handleOnPasswordConfirmation}/>
+          </Paper>
+        </Dialog>
     </Dialog>
   );
 }

@@ -76,6 +76,7 @@ export default function MasterPasswordInput(props) {
             id="filled-password-input"
             label="Master Password"
             type="password"
+            variant="outlined"
             onChange={(event) => onTextFieldChange(event)}
             value={password}
             onKeyPress={(event) => onTextFieldKeyPress(event)}
