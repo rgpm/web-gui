@@ -37,7 +37,7 @@ export default function App() {
   const [current_gen_pass, setCurrentGenPass] = React.useState("");
 
   function handleNext(uuid) {
-    setActiveStep((activeStep + 1) % getSteps().length);
+    setActiveStep((activeStep + 1) % 3);
     setCurrentRecordUUID(uuid);
 
   }
@@ -54,11 +54,6 @@ export default function App() {
   function handleStep(step) {
     setActiveStep(step);
   };
-
-  function getSteps() {
-    const step2 = "Enter Master Password" + (current_record_uuid === null ? "" : " for " + rgpm.readRecord(current_record_uuid).name);
-    return ['Show All Passwords', step2, 'Generated Password'];
-  }
 
   function updateRecords() {
     setRecordUUIDS(rgpm.listRecords()["records"]);
@@ -77,13 +72,21 @@ export default function App() {
   return (
     <div className={classes.root}>
       <Stepper nonLinear activeStep={activeStep}>
-        {getSteps().map((label, index) => (
-          <Step key={label}>
-            <StepButton onClick={() => handleStep(index)} completed={completed[index]}>
-              {label}
-            </StepButton>
-          </Step>
-        ))}
+        <Step key={0} disabled={false}>
+          <StepButton onClick={() => handleStep(0)} completed={completed[0]}>
+            Show All Passwords
+          </StepButton>
+        </Step>
+        <Step key={1} disabled={current_record_uuid === null}>
+          <StepButton onClick={() => handleStep(1)} completed={completed[1]}>
+            {"Enter Master Password" + (current_record_uuid === null ? "" : " for " + rgpm.readRecord(current_record_uuid).name)}
+          </StepButton>
+        </Step>
+        <Step key={2} disabled={true}>
+          <StepButton onClick={() => handleStep(2)} completed={completed[2]}>
+            Generated Password
+          </StepButton>
+        </Step>
       </Stepper>
       <div>
         {
