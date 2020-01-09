@@ -62,6 +62,7 @@ export default function ServiceRecordList(props) {
     const rgpm = new rgpmlib();
     defaultPRML.properties.minLength = minPasswordLength;
     defaultPRML.properties.maxLength = maxPasswordLength;
+
     rgpm.createRecord(
       name,
       locator,
@@ -83,10 +84,16 @@ export default function ServiceRecordList(props) {
   }
 
   function handleMinSliderOnChange(event, newValue) {
+    if(newValue > maxPasswordLength) {
+      return;
+    }
     setMinPasswordLength(newValue);
   }
 
   function handleMaxSliderOnChange(event, newValue) {
+    if(newValue < minPasswordLength) {
+      return;
+    }
     setMaxPasswordLength(newValue);
   }
 
@@ -154,6 +161,7 @@ export default function ServiceRecordList(props) {
                   <Typography>Minimum Password Length:</Typography>
                   <Slider
                     defaultValue={minPasswordLength}
+                    value={minPasswordLength}
                     label="asdf"
                     onChange={(event, newValue) => handleMinSliderOnChange(event, newValue)}
                     valueLabelDisplay="auto"
@@ -168,6 +176,7 @@ export default function ServiceRecordList(props) {
                   <Typography>Maximum Password Length:</Typography>
                   <Slider
                     defaultValue={maxPasswordLength}
+                    value={maxPasswordLength}
                     label="asdf"
                     onChange={(event, newValue) => handleMaxSliderOnChange(event, newValue)}
                     valueLabelDisplay="auto"
