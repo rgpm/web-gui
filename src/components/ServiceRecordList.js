@@ -9,6 +9,7 @@ import { Typography, makeStyles, Grid, Icon } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import EditIcon from '@material-ui/icons/Edit';
+import {isMobile} from 'react-device-detect';
 
 const rgpmlib = require("@rgpm/core/src/rgpm");
 
@@ -49,19 +50,35 @@ export default function ServiceRecordList(props) {
             secondary={record.identifier}
           />
           {
-            currentHoveredRecord == record_uuid && 
-            <ListItemSecondaryAction>
-            <IconButton edge="end" onClick={event => handleEditIconClick(event, record.uuid)}>
-              <EditIcon/>
-            </IconButton>
-            <IconButton edge="end" aria-label="delete" onClick={event => handleDeleteIconClick(event, record.uuid)}>
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
+            showSecondaryActions(record_uuid)
           }
         </ListItem>);
       });
     }
+  }
+
+  /**
+   * This function determines if the secondary actions on each list item (delete
+   * and edit) should be shown or not. This takes into account the mobile view
+   * @param {String} uuid The record uuid 
+   */
+  function showSecondaryActions(uuid) {
+    if(isMobile === false) {
+      if(currentHoveredRecord !== uuid)
+      {
+        return null;
+      }
+    }
+    return (
+      <ListItemSecondaryAction>
+        <IconButton edge="end" onClick={event => handleEditIconClick(event, uuid)}>
+          <EditIcon/>
+        </IconButton>
+        <IconButton edge="end" aria-label="delete" onClick={event => handleDeleteIconClick(event, uuid)}>
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>);
+
   }
 
   function onListItemMouseOver(event, uuid) {
