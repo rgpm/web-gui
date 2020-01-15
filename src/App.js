@@ -9,8 +9,9 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import ServiceRecordAddDialog from './components/ServiceRecordAddDialog';
 import MasterPasswordInput from './components/MasterPasswordInput';
-import { AppBar, Toolbar, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Icon } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 const rgpmlib = require("@rgpm/core/src/rgpm");
 
@@ -89,6 +90,10 @@ export default function App() {
     handleStep(0);
   }
 
+  function handleHelpButtonOnClick() {
+    alert("HELP!");
+  }
+
   const classes = useStyles();
 
   return (
@@ -104,6 +109,9 @@ export default function App() {
           <Typography variant="h6" className={classes.appBarTitle}>
             RGPM: Generative Password Manager
           </Typography>
+          <IconButton onClick={handleHelpButtonOnClick}>
+            <HelpOutlineIcon/>
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Stepper nonLinear activeStep={activeStep}>
