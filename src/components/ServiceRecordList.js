@@ -5,7 +5,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import { Typography, makeStyles, Grid, Icon } from '@material-ui/core';
+import { Typography, makeStyles, Grid } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import EditIcon from '@material-ui/icons/Edit';
