@@ -15,7 +15,7 @@ import HouseIcon from '@material-ui/icons/House';
 import LocalAirportIcon from '@material-ui/icons/LocalAirport';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import SportsSoccerIcon from '@material-ui/icons/SportsSoccer';
-import { Grid, IconButton, Button } from '@material-ui/core';
+import { Grid, Button } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 export default function MasterPasswordInput(props) {
