@@ -54,8 +54,8 @@ export default function ServiceRecordList(props) {
   const [passwordDialogOpen, setPasswordDialogOpen] = React.useState(false);
   const [passwordLength, setPasswordLength] = React.useState([8,36]);
   
-  const sliderIterTMin = optimalIterT - optimalIterT * .15;
-  const sliderIterTMax = optimalIterT + optimalIterT * .15;
+  const sliderIterTMin = Math.floor(optimalIterT - optimalIterT * .25);
+  const sliderIterTMax = Math.ceil(optimalIterT + optimalIterT * .25);
   const marks = [
     {
       value: optimalIterT,
