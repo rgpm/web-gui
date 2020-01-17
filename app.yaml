@@ -15,9 +15,9 @@ env: flex
 runtime: custom
 
 handlers:
-- url: /.*
+- url: .*
+  script: auto
   secure: always
   redirect_http_response_code: 301
-  script: auto
 
 # [END app_yaml]
