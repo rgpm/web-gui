@@ -6,7 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import { Dialog, Toolbar, IconButton, Button, TextField, Grid, Slider } from '@material-ui/core';
+import { Dialog, Toolbar, IconButton, Button, TextField, Grid, Slider, Tooltip } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AppBar from '@material-ui/core/AppBar';
 import MasterPasswordInput from './MasterPasswordInput';
@@ -52,7 +52,7 @@ export default function ServiceRecordList(props) {
   const [iter_t, setIterT] = React.useState(30);
   const [passwordDialogOpen, setPasswordDialogOpen] = React.useState(false);
   const [maxPasswordLength, setMaxPasswordLength] = React.useState(64);
-  const [minPasswordLength, setMinPasswordLength] = React.useState(0);
+  const [minPasswordLength, setMinPasswordLength] = React.useState(1);
 
   function handleSaveButtonOnClick() {
     setPasswordDialogOpen(true);
@@ -127,12 +127,17 @@ export default function ServiceRecordList(props) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Grid container direction="column">
-                <TextField label="Name" onChange={(event) => setName(event.target.value)} />
-                <TextField label="Locator"onChange={(event) => setLocator(event.target.value)}/>
-                <TextField label="Identifier" onChange={(event) => setIdentifier(event.target.value)}/>
+                <TextField label="Record Name" onChange={(event) => setName(event.target.value)} helperText="The friendly name of the record"/>
+                <TextField label="Locator"onChange={(event) => setLocator(event.target.value)} helperText="The URL of the service"/>
+                <TextField label="Identifier" onChange={(event) => setIdentifier(event.target.value)} helperText="The username for the service"/>
                 <div>
                   <br/>
-                  <Typography>Iteration Count:</Typography>
+                  <Typography variant="h6">Iteration Count</Typography>
+                  <Typography variant="subtitle2">
+                    This decides how secure the password is against brute force attacks. Leave 
+                    at the default for modern machines. If you want the password quicker, then 
+                    move the slider to a lower value. A more secure password will use a larger value.
+                  </Typography>
                   <Slider
                     defaultValue={iter_t}
                     label="asdf"
@@ -152,7 +157,7 @@ export default function ServiceRecordList(props) {
               expandIcon={<ExpandMoreIcon />}
               id="basic-info"
             >
-              <Typography>Password Requirement Description</Typography>
+              <Typography>Password Requirements</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Grid container direction="column">
@@ -167,8 +172,9 @@ export default function ServiceRecordList(props) {
                     valueLabelDisplay="auto"
                     step={1}
                     marks
-                    min={0}
+                    min={1}
                     max={64}
+                    track={false}
                   />
                 </div>
                 <div>
@@ -184,6 +190,7 @@ export default function ServiceRecordList(props) {
                     marks
                     min={0}
                     max={64}
+                    track={false}
                   />
                 </div>
               </Grid>                     
