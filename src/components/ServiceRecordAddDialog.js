@@ -45,16 +45,39 @@ export default function ServiceRecordList(props) {
   function handleDialogOnClose() {
     props.closeHandler();
   }
-
+  
   const [name, setName] = React.useState("");
   const [locator, setLocator] = React.useState("");
   const [identifier, setIdentifier] = React.useState("");
-  const [iter_t, setIterT] = React.useState(30);
+  const [iter_t, setIterT] = React.useState(100);
+  const [optimalIterT, setOptimalIterT] = React.useState(JSON.parse(window.localStorage.getItem("optimalIter")));
   const [passwordDialogOpen, setPasswordDialogOpen] = React.useState(false);
   const [passwordLength, setPasswordLength] = React.useState([8,36]);
+  
+  const sliderIterTMin = optimalIterT - optimalIterT * .15;
+  const sliderIterTMax = optimalIterT + optimalIterT * .15;
+  const marks = [
+    {
+      value: optimalIterT,
+      label: "Recommended"
+    }
+  ];
+
+  if(optimalIterT === null) {
+    setOptimalIterT(0);
+    getIterT();
+  } 
 
   function handleSaveButtonOnClick() {
     setPasswordDialogOpen(true);
+  }
+
+  function getIterT() {
+    new rgpmlib().calculateIterT().then((value) => {
+      setOptimalIterT(value);
+      setIterT(value);
+      window.localStorage.setItem("optimalIter", JSON.stringify(value));
+    });
   }
 
   function handleOnPasswordConfirmation(password) {
@@ -127,15 +150,18 @@ export default function ServiceRecordList(props) {
                     at the default for modern machines. If you want the password quicker, then 
                     move the slider to a lower value. A more secure password will use a larger value.
                   </Typography>
+                  <br/><br/>
                   <Slider
-                    defaultValue={iter_t}
+                    defaultValue={optimalIterT}
                     label="asdf"
                     onChange={(event, newValue) => handleSliderOnChange(event, newValue)}
                     valueLabelDisplay="auto"
-                    step={10}
-                    marks
-                    min={10}
-                    max={100}
+                    step={100}
+                    min={sliderIterTMin}
+                    max={sliderIterTMax}
+                    track={false}
+                    valueLabelDisplay="on"
+                    marks={marks}
                   />
                 </div>
               </Grid>
