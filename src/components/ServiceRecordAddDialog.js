@@ -51,8 +51,7 @@ export default function ServiceRecordList(props) {
   const [identifier, setIdentifier] = React.useState("");
   const [iter_t, setIterT] = React.useState(30);
   const [passwordDialogOpen, setPasswordDialogOpen] = React.useState(false);
-  const [maxPasswordLength, setMaxPasswordLength] = React.useState(64);
-  const [minPasswordLength, setMinPasswordLength] = React.useState(1);
+  const [passwordLength, setPasswordLength] = React.useState([8,36]);
 
   function handleSaveButtonOnClick() {
     setPasswordDialogOpen(true);
@@ -60,8 +59,8 @@ export default function ServiceRecordList(props) {
 
   function handleOnPasswordConfirmation(password) {
     const rgpm = new rgpmlib();
-    defaultPRML.properties.minLength = minPasswordLength;
-    defaultPRML.properties.maxLength = maxPasswordLength;
+    defaultPRML.properties.minLength = passwordLength[0];
+    defaultPRML.properties.maxLength = passwordLength[1];
 
     rgpm.createRecord(
       name,
@@ -83,18 +82,8 @@ export default function ServiceRecordList(props) {
     setIterT(newValue);
   }
 
-  function handleMinSliderOnChange(event, newValue) {
-    if(newValue > maxPasswordLength) {
-      return;
-    }
-    setMinPasswordLength(newValue);
-  }
-
-  function handleMaxSliderOnChange(event, newValue) {
-    if(newValue < minPasswordLength) {
-      return;
-    }
-    setMaxPasswordLength(newValue);
+  function handlePasswordLengthSliderOnChange(event, newValue) {
+    setPasswordLength(newValue);
   }
 
   function handlePasswordDialogOnClose() {
@@ -163,34 +152,17 @@ export default function ServiceRecordList(props) {
               <Grid container direction="column">
                 <div>
                   <br/>
-                  <Typography>Minimum Password Length:</Typography>
+                  <Typography>Password Length:</Typography>
                   <Slider
-                    defaultValue={minPasswordLength}
-                    value={minPasswordLength}
-                    label="asdf"
-                    onChange={(event, newValue) => handleMinSliderOnChange(event, newValue)}
+                    defaultValue={passwordLength}
+                    value={passwordLength}
+                    label="Password Length"
+                    onChange={handlePasswordLengthSliderOnChange}
                     valueLabelDisplay="auto"
                     step={1}
                     marks
                     min={1}
                     max={64}
-                    track={false}
-                  />
-                </div>
-                <div>
-                  <br/>
-                  <Typography>Maximum Password Length:</Typography>
-                  <Slider
-                    defaultValue={maxPasswordLength}
-                    value={maxPasswordLength}
-                    label="asdf"
-                    onChange={(event, newValue) => handleMaxSliderOnChange(event, newValue)}
-                    valueLabelDisplay="auto"
-                    step={1}
-                    marks
-                    min={0}
-                    max={64}
-                    track={false}
                   />
                 </div>
               </Grid>                     
