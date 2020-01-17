@@ -13,6 +13,7 @@ import { AppBar, Toolbar, IconButton, Tooltip } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import PasswordTextField from './components/PasswordTextField';
+import HelpDialog from './components/HelpDialog';
 
 const rgpmlib = require("@rgpm/core/src/rgpm");
 
@@ -42,6 +43,7 @@ export default function App() {
   const rgpm = new rgpmlib();
   const [activeStep, setActiveStep] = React.useState(0);
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
+  const [helpDialogOpen, setHelpDialogOpen] = React.useState(false);
 
   const records = rgpm.listRecords();
   const [record_uuids, setRecordUUIDS] = React.useState(records !== null ? records["records"] : null);
@@ -116,7 +118,7 @@ export default function App() {
   }
 
   function handleHelpButtonOnClick() {
-    alert("HELP!");
+    setHelpDialogOpen(true);
   }
 
   function handleOnPreviousPasswordGeneration(uuid) {
@@ -193,6 +195,7 @@ export default function App() {
           </StepButton>
         </Step>
       </Stepper>
+      <HelpDialog open={helpDialogOpen} onClose={() => setHelpDialogOpen(false)}/>
       <div>
         {
           activeStep === 0 ? 
