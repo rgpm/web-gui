@@ -1,7 +1,6 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-
-
+import { makeStyles } from '@material-ui/core/styles';
 import AlbumIcon from '@material-ui/icons/Album';
 import ApartmentIcon from '@material-ui/icons/Apartment';
 import AudiotrackIcon from '@material-ui/icons/Audiotrack';
@@ -15,14 +14,23 @@ import HouseIcon from '@material-ui/icons/House';
 import LocalAirportIcon from '@material-ui/icons/LocalAirport';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import SportsSoccerIcon from '@material-ui/icons/SportsSoccer';
-import { Grid, Button } from '@material-ui/core';
+import { Grid, Button, LinearProgress } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    width: '100%',
+  }
+}));
 
 export default function MasterPasswordInput(props) {
 
   const pictureSet = [AlbumIcon, ApartmentIcon, AudiotrackIcon, Brightness3Icon, Brightness7Icon, CakeIcon, ChildFriendlyIcon, DirectionsBikeIcon, DirectionsBoatIcon, HouseIcon, LocalAirportIcon, ShoppingCartIcon, SportsSoccerIcon];
   const [password, setPassword] = React.useState("");
   const [iconIndices, setIconIndices] = React.useState([]);
+  const [showProgress, setShowProgress] = React.useState(false);
+  const [buttonText, setButtonText] = React.useState("Generate Password");
 
   function onTextFieldChange(event) {
     setPassword(event.target.value);
@@ -55,6 +63,8 @@ export default function MasterPasswordInput(props) {
       return;
     }
     props.onPasswordConfirmation(password);
+    setShowProgress(true);
+    setButtonText("Generating password...");
   }
   
   function onTextFieldKeyPress(event) {
@@ -63,7 +73,10 @@ export default function MasterPasswordInput(props) {
     }
   }
 
+  
+
   let listIndex = 0;
+  const classes = useStyles();
   return (
     <div>
       <Grid
@@ -72,32 +85,37 @@ export default function MasterPasswordInput(props) {
         justify="center"
         alignItems="center"
         >
-        <TextField
-            id="filled-password-input"
-            label="Master Password"
-            type="password"
-            variant="outlined"
-            autoFocus
-            onChange={(event) => onTextFieldChange(event)}
-            value={password}
-            onKeyPress={(event) => onTextFieldKeyPress(event)}
-        />
-        
         <div>
-          {
-            iconIndices.map(index => {
-              const Icon = pictureSet[index];
-              return <Icon key={listIndex++}/>
-            })
-          }
-        </div>
+          <TextField
+              id="filled-password-input"
+              label="Master Password"
+              type="password"
+              variant="outlined"
+              autoFocus
+              onChange={(event) => onTextFieldChange(event)}
+              value={password}
+              onKeyPress={(event) => onTextFieldKeyPress(event)}
+          />
+          
+          <div>
+            {
+              iconIndices.map(index => {
+                const Icon = pictureSet[index];
+                return <Icon key={listIndex++}/>
+              })
+            }
+          </div>
 
-        <Button
-          endIcon={<ArrowForwardIosIcon/>}
-          onClick={handleButtonOnClick}
-        >
-          Generate Password
-        </Button>
+          <Button
+            endIcon={<ArrowForwardIosIcon/>}
+            onClick={handleButtonOnClick}
+            disabled={showProgress}
+          >
+            {buttonText}
+          </Button>
+
+          {showProgress && <LinearProgress className={classes.root} color="secondary" />}
+        </div>
       </Grid>
     </div>
   );
