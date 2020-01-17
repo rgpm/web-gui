@@ -6,7 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import { Dialog, Toolbar, IconButton, Button, TextField, Grid, Slider, Tooltip } from '@material-ui/core';
+import { Dialog, Toolbar, IconButton, Button, TextField, Grid, Slider } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AppBar from '@material-ui/core/AppBar';
 import MasterPasswordInput from './MasterPasswordInput';
