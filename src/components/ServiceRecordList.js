@@ -118,7 +118,7 @@ export default function ServiceRecordList(props) {
 
   const classes = useStyles();
 
-  if(props.record_uuids !== null) {
+  if(props.record_uuids !== null && props.record_uuids.length > 0) {
     return (
       <div>
         <Paper>
