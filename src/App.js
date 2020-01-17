@@ -9,7 +9,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import ServiceRecordAddDialog from './components/ServiceRecordAddDialog';
 import MasterPasswordInput from './components/MasterPasswordInput';
-import { AppBar, Toolbar, IconButton, Icon } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Tooltip } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
@@ -40,14 +40,16 @@ export default function App() {
 
   const rgpm = new rgpmlib();
   const [activeStep, setActiveStep] = React.useState(0);
-  const [completed, setCompleted] = React.useState({});
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
 
   const records = rgpm.listRecords();
   const [record_uuids, setRecordUUIDS] = React.useState(records !== null ? records["records"] : null);
   const [current_record_uuid, setCurrentRecordUUID] = React.useState(null);
   const [current_gen_pass, setCurrentGenPass] = React.useState("");
+  const [previousGenPass, setPreviousGenPass] = React.useState("");
   const [backArrowVisibleStatus, setBackArrowVisibleStatus] = React.useState(false);
+  const [generatePreviousPassword, setGeneratePreviousPassword] = React.useState(false); 
+  const [generateNextPassword, setGenerateNextPassword] = React.useState(false); 
 
   function handleNext(uuid) {
     handleStep((activeStep + 1) % 3);
@@ -70,6 +72,11 @@ export default function App() {
     } else {
       setBackArrowVisibleStatus(false);
       setCurrentRecordUUID(null);
+
+      // Reset different password generation options when viewing all passwords
+      setGeneratePreviousPassword(false);
+      setGenerateNextPassword(false);
+      setPreviousGenPass("");
     }
   };
 
@@ -94,6 +101,16 @@ export default function App() {
     alert("HELP!");
   }
 
+  function handleOnPreviousPasswordGeneration(uuid) {
+    setGeneratePreviousPassword(true);
+    handleNext(uuid);
+  }
+
+  function handleOnNextPasswordGeneration(uuid) {
+    setGenerateNextPassword(true);
+    handleNext(uuid);
+  }
+
   const classes = useStyles();
 
   return (
@@ -116,17 +133,17 @@ export default function App() {
       </AppBar>
       <Stepper nonLinear activeStep={activeStep}>
         <Step key={0} disabled={false}>
-          <StepButton onClick={() => handleStep(0)} completed={completed[0]}>
+          <StepButton onClick={() => handleStep(0)} completed={activeStep > 0}>
             Show All Passwords
           </StepButton>
         </Step>
         <Step key={1} disabled={current_record_uuid === null}>
-          <StepButton onClick={() => handleStep(1)} completed={completed[1]}>
+          <StepButton onClick={() => handleStep(1)} completed={activeStep > 1}>
             {"Enter Master Password" + (current_record_uuid === null ? "" : " for " + rgpm.readRecord(current_record_uuid).name)}
           </StepButton>
         </Step>
         <Step key={2} disabled={true}> {/* Always be disabled so the user has to always has to enter the password*/ }
-          <StepButton onClick={() => handleStep(2)} completed={completed[2]}>
+          <StepButton onClick={() => handleStep(2)} completed={activeStep > 2}>
             Generated Password
           </StepButton>
         </Step>
@@ -135,10 +152,12 @@ export default function App() {
         {
           activeStep === 0 ? 
           <div>
-            <ServiceRecordList record_uuids={record_uuids} onPasswordSelection={(uuid) => handleNext(uuid)} onListUpdate={updateRecords}/>
-            <Fab color="primary" aria-label="add" className={classes.fab} onClick={handleAddButtonOnClick}> 
-              <AddIcon />
-            </Fab>
+            <ServiceRecordList record_uuids={record_uuids} onPasswordSelection={(uuid) => handleNext(uuid)} onListUpdate={updateRecords} onPreviousPasswordGeneration={handleOnPreviousPasswordGeneration} onNextPasswordGeneration={handleOnNextPasswordGeneration}/>
+            <Tooltip title="Add Record">
+              <Fab color="primary" aria-label="add" className={classes.fab} onClick={handleAddButtonOnClick}> 
+                <AddIcon />
+              </Fab>
+            </Tooltip>
             <ServiceRecordAddDialog onListUpdate={updateRecords} open={addDialogOpen} closeHandler={handleDialogOnClose} />
           </div> 
           : 

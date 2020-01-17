@@ -5,10 +5,11 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import { Typography, makeStyles, Grid } from '@material-ui/core';
+import { Typography, makeStyles, Grid, Tooltip } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import EditIcon from '@material-ui/icons/Edit';
+import HistoryIcon from '@material-ui/icons/History';
+import UpdateIcon from '@material-ui/icons/Update';
 import {isMobile} from 'react-device-detect';
 
 const rgpmlib = require("@rgpm/core/src/rgpm");
@@ -40,17 +41,17 @@ export default function ServiceRecordList(props) {
         const record = rgpm.readRecord(record_uuid);
         return (
         <ListItem
+          selected={record.uuid === currentHoveredRecord}
           onClick={event => handleListItemClick(event, record.uuid)}
           onMouseOver={event => onListItemMouseOver(event, record.uuid)}
-          onMouseOut={event => onListItemMouseOver(event, "null")}
           key = {record.uuid}
         >
           <ListItemText
             primary={record.name}
-            secondary={record.identifier}
+            secondary={record.identifier} 
           />
           {
-            showSecondaryActions(record_uuid)
+            showSecondaryActions(record)
           }
         </ListItem>);
       });
@@ -62,7 +63,8 @@ export default function ServiceRecordList(props) {
    * and edit) should be shown or not. This takes into account the mobile view
    * @param {String} uuid The record uuid 
    */
-  function showSecondaryActions(uuid) {
+  function showSecondaryActions(record) {
+    const uuid = record.uuid;
     if(isMobile === false) {
       if(currentHoveredRecord !== uuid)
       {
@@ -71,12 +73,24 @@ export default function ServiceRecordList(props) {
     }
     return (
       <ListItemSecondaryAction>
-        <IconButton edge="end" onClick={event => handleEditIconClick(event, uuid)}>
-          <EditIcon/>
-        </IconButton>
-        <IconButton edge="end" aria-label="delete" onClick={event => handleDeleteIconClick(event, uuid)}>
-          <DeleteIcon />
-        </IconButton>
+        { 
+          record.revision !== 1 && 
+          <Tooltip title={"Generate Previous Password Revision (#" + (record.revision - 1) + ")"}>
+            <IconButton edge="end" onClick={event => handleHistoryIconClick(event, uuid)}>
+              <HistoryIcon/>
+            </IconButton>
+          </Tooltip>
+        }
+        <Tooltip title={"Generate Next Password Revision (#" + (record.revision + 1) + ")"}>
+          <IconButton edge="end" onClick={event => handleUpdateIconClick(event, uuid)}>
+            <UpdateIcon/>
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete Record">
+          <IconButton edge="end" aria-label="delete" onClick={event => handleDeleteIconClick(event, uuid)}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
       </ListItemSecondaryAction>);
 
   }
@@ -94,8 +108,12 @@ export default function ServiceRecordList(props) {
     props.onPasswordSelection(uuid);
   }
 
-  function handleEditIconClick(event, uuid) {
-
+  function handleHistoryIconClick(event, uuid) {
+    props.onPreviousPasswordGeneration(uuid);
+  }
+  
+  function handleUpdateIconClick(event, uuid) {
+    props.onNextPasswordGeneration(uuid);
   }
 
   const classes = useStyles();
@@ -104,7 +122,7 @@ export default function ServiceRecordList(props) {
     return (
       <div>
         <Paper>
-          <List dense={false}>
+          <List dense={false} onMouseLeave={event => onListItemMouseOver(event, "null")}>
             {
               getServiceRecords()
             }
