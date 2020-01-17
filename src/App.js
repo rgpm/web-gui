@@ -12,6 +12,7 @@ import MasterPasswordInput from './components/MasterPasswordInput';
 import { AppBar, Toolbar, IconButton, Tooltip } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import PasswordTextField from './components/PasswordTextField';
 
 const rgpmlib = require("@rgpm/core/src/rgpm");
 
@@ -136,7 +137,8 @@ export default function App() {
     if(generatePrevPassword) {
       return (<div>
                 <Typography>Below is the previous revision of the password:</Typography>
-                <Typography>Old Revision: {previousGenPass}</Typography>
+                <Typography>Old Revision:</Typography>
+                <PasswordTextField text={previousGenPass}/>
               </div>);
     }
 
@@ -144,13 +146,16 @@ export default function App() {
     if(generateNextPassword) {
       return (<div>
         <Typography>Be sure to change your password to the new password:</Typography>
-        <Typography>Old Revision: {previousGenPass}</Typography>
-        <Typography>New Revision: {currentGenPass}</Typography>
+        <Typography>Old Revision:</Typography>
+        <PasswordTextField text={previousGenPass}/>
+        <br/>
+        <Typography>New Revision:</Typography>
+        <PasswordTextField text={currentGenPass}/>
       </div>);
     }
 
     // Just show the current password
-    return <Typography>Generated Password: {currentGenPass}</Typography> ;
+    return (<div><Typography>Generated Password:</Typography><PasswordTextField text={currentGenPass}/></div>);
   }
 
   return (
