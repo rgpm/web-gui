@@ -45,10 +45,10 @@ export default function App() {
   const records = rgpm.listRecords();
   const [record_uuids, setRecordUUIDS] = React.useState(records !== null ? records["records"] : null);
   const [current_record_uuid, setCurrentRecordUUID] = React.useState(null);
-  const [current_gen_pass, setCurrentGenPass] = React.useState("");
+  const [currentGenPass, setCurrentGenPass] = React.useState("");
   const [previousGenPass, setPreviousGenPass] = React.useState("");
   const [backArrowVisibleStatus, setBackArrowVisibleStatus] = React.useState(false);
-  const [generatePreviousPassword, setGeneratePreviousPassword] = React.useState(false); 
+  const [generatePrevPassword, setGeneratePrevPassword] = React.useState(false); 
   const [generateNextPassword, setGenerateNextPassword] = React.useState(false); 
 
   function handleNext(uuid) {
@@ -74,7 +74,7 @@ export default function App() {
       setCurrentRecordUUID(null);
 
       // Reset different password generation options when viewing all passwords
-      setGeneratePreviousPassword(false);
+      setGeneratePrevPassword(false);
       setGenerateNextPassword(false);
       setPreviousGenPass("");
     }
@@ -86,8 +86,25 @@ export default function App() {
     setCurrentRecordUUID(null);
   }
 
-  function generatePassword(password) {
-    rgpm.genPass(rgpm.readRecord(current_record_uuid), password).then((gen_pass) => {
+  async function generatePassword(password) {
+    const record = rgpm.readRecord(current_record_uuid);
+
+    if(generateNextPassword) { 
+      await rgpm.updateToNextRevision(record, password, record.iter_t, record.requirements);
+      await rgpm.updateRecord(record);
+      setCurrentRecordUUID(null);
+    }
+
+    // We need to generate the previous password if either requested or changing a revision
+    if(generatePrevPassword || generateNextPassword) {
+      rgpm.genPrevPass(record, password).then((gen_pass) => {
+        setPreviousGenPass(gen_pass);
+        handleStep(2);
+      });
+    } 
+
+    // Just generate the current password
+    rgpm.genPass(record, password).then((gen_pass) => {
       setCurrentGenPass(gen_pass);
       handleStep(2);
     });
@@ -102,7 +119,7 @@ export default function App() {
   }
 
   function handleOnPreviousPasswordGeneration(uuid) {
-    setGeneratePreviousPassword(true);
+    setGeneratePrevPassword(true);
     handleNext(uuid);
   }
 
@@ -112,6 +129,29 @@ export default function App() {
   }
 
   const classes = useStyles();
+
+
+  function displayPassword() {
+    // If we are generating the previous password, then show that
+    if(generatePrevPassword) {
+      return (<div>
+                <Typography>Below is the previous revision of the password:</Typography>
+                <Typography>Old Revision: {previousGenPass}</Typography>
+              </div>);
+    }
+
+    // If we are generating the next password, show the previous and the new one
+    if(generateNextPassword) {
+      return (<div>
+        <Typography>Be sure to change your password to the new password:</Typography>
+        <Typography>Old Revision: {previousGenPass}</Typography>
+        <Typography>New Revision: {currentGenPass}</Typography>
+      </div>);
+    }
+
+    // Just show the current password
+    return <Typography>Generated Password: {currentGenPass}</Typography> ;
+  }
 
   return (
     <div className={classes.root}>
@@ -162,7 +202,9 @@ export default function App() {
           </div> 
           : 
           activeStep === 1 ? <div><MasterPasswordInput onPasswordConfirmation={(password) => generatePassword(password)}/></div> :
-          activeStep === 2 ? <Typography>Generated Password: {current_gen_pass}</Typography> : <Typography>Unknown</Typography>
+          activeStep === 2 ? <div>      
+              {displayPassword()}
+            </div> : <Typography>Unknown</Typography>
         }
       </div>
     </div>
