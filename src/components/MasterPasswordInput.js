@@ -14,8 +14,9 @@ import HouseIcon from '@material-ui/icons/House';
 import LocalAirportIcon from '@material-ui/icons/LocalAirport';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import SportsSoccerIcon from '@material-ui/icons/SportsSoccer';
-import { Grid, Button, LinearProgress } from '@material-ui/core';
+import { Grid, Button, LinearProgress, Dialog, DialogTitle, DialogContent, DialogContentText, IconButton } from '@material-ui/core';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +31,13 @@ export default function MasterPasswordInput(props) {
   const [password, setPassword] = React.useState("");
   const [iconIndices, setIconIndices] = React.useState([]);
   const [showProgress, setShowProgress] = React.useState(false);
+  const [infoDialog, setinfoDialog] = React.useState(false);
   const [buttonText, setButtonText] = React.useState("Generate Password");
+
+  if(JSON.parse(window.localStorage.getItem("firstMasterPasswordLoad")) == null) {
+    setinfoDialog(true);
+    window.localStorage.setItem("firstMasterPasswordLoad", JSON.stringify(false));
+  }
 
   function onTextFieldChange(event) {
     setPassword(event.target.value);
@@ -96,6 +103,9 @@ export default function MasterPasswordInput(props) {
               value={password}
               onKeyPress={(event) => onTextFieldKeyPress(event)}
           />
+          <IconButton onClick={() => setinfoDialog(true)}>
+            <HelpOutlineIcon/>
+          </IconButton>
           
           <div>
             {
@@ -117,6 +127,18 @@ export default function MasterPasswordInput(props) {
           {showProgress && <LinearProgress className={classes.root} color="secondary" />}
         </div>
       </Grid>
+      <Dialog open={infoDialog} onClose={() => setinfoDialog(false)}>
+        <DialogTitle>Master Password Information</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Your master password should not be used anywhere else on the internet and only
+            known by you. This application does not store any information about your
+            password and thus cannot know if you enter it correctly or not. Type your
+            password carefully and then check the 4 icons for verification of your password
+            in future uses.
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

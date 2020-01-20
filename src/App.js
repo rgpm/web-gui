@@ -47,7 +47,7 @@ export default function App() {
   const rgpm = new rgpmlib();
   const [activeStep, setActiveStep] = React.useState(0);
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
-  const [helpDialogOpen, setHelpDialogOpen] = React.useState(true);
+  const [helpDialogOpen, setHelpDialogOpen] = React.useState(false);
 
   const records = rgpm.listRecords();
   const [record_uuids, setRecordUUIDS] = React.useState(records !== null ? records["records"] : null);

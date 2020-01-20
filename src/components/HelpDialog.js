@@ -23,16 +23,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const usageText = "RGPM will generate your passwords each time\
- that you request them. You will need a friendly name, a locator (URL),\
- and an identifer (username). These values will be used to generate your\
- password. Once you have added a record, select it to generate the associated\
- password. The master password field will always have icons associated with it\
- so that you are able to check if your password was entered correctly. Use the copy\
- to clipboard button to copy your generated password. Then you are free to click step 1\
- and return to your password list.";
-
-
 export default function HelpDialog(props) {
 
   const classes = useStyles();
@@ -45,9 +35,24 @@ export default function HelpDialog(props) {
           justify="center">
             <Typography className={classes.header} variant="h3">RGPM Walk-through</Typography>
             <Typography className={classes.header} variant="h4">About</Typography>
-            <Typography>RGPM is.....</Typography>
+            <Typography>
+              About RGPM was created to research participants understanding and usage of
+              generative password managers. More information can be found at github.com/rgpm
+            </Typography>
             <Typography className={classes.header}  variant="h4">Usage</Typography>
-            <Typography>{usageText}</Typography>
+            <Typography>
+              RGPM will generate your passwords each time
+              that you request them. You will need a friendly name, a locator (URL),
+              and an identifer (username). These values will be used to generate your
+              password. Once you have added a record, select it to generate the associated
+              password. The master password field will always have icons associated with it
+              so that you are able to check if your password was entered correctly. Use the copy
+              to clipboard button to copy your generated password. Then you are free to click step 1
+              and return to your password list.  
+            </Typography>
+            <Typography>
+              To get started, add a record using the add button in the bottom right corner.
+            </Typography>
             <Typography className={classes.header}  variant="h4">Icon Explaination</Typography>
             <Grid 
               container
