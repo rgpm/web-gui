@@ -4,13 +4,13 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { green, amber } from '@material-ui/core/colors';
+import { amber, lightBlue } from '@material-ui/core/colors';
 import HttpsRedirect from 'react-https-redirect';
 
 const theme = createMuiTheme({
     palette: {
       primary: amber,
-      secondary: green,
+      secondary: lightBlue,
       text: {
           primary: "#000000"
       }
