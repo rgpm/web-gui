@@ -36,6 +36,10 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
   },
+  mainDiv: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
+  }
 }));
 
 export default function App() {
@@ -43,7 +47,7 @@ export default function App() {
   const rgpm = new rgpmlib();
   const [activeStep, setActiveStep] = React.useState(0);
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
-  const [helpDialogOpen, setHelpDialogOpen] = React.useState(false);
+  const [helpDialogOpen, setHelpDialogOpen] = React.useState(true);
 
   const records = rgpm.listRecords();
   const [record_uuids, setRecordUUIDS] = React.useState(records !== null ? records["records"] : null);
@@ -201,7 +205,7 @@ export default function App() {
         </Step>
       </Stepper>
       <HelpDialog open={helpDialogOpen} onClose={() => setHelpDialogOpen(false)}/>
-      <div>
+      <div className={classes.mainDiv}>
         {
           activeStep === 0 ? 
           <div>
