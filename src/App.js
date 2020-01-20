@@ -54,6 +54,11 @@ export default function App() {
   const [generatePrevPassword, setGeneratePrevPassword] = React.useState(false); 
   const [generateNextPassword, setGenerateNextPassword] = React.useState(false); 
 
+  if(JSON.parse(window.localStorage.getItem("firstTimeLoad")) == null) {
+    setHelpDialogOpen(true);
+    window.localStorage.setItem("firstTimeLoad", JSON.stringify(false));
+  }
+
   function handleNext(uuid) {
     handleStep((activeStep + 1) % 3);
     setCurrentRecordUUID(uuid);
