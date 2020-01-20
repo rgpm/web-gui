@@ -158,7 +158,6 @@ export default function ServiceRecordList(props) {
                     defaultValue={optimalIterT}
                     label="asdf"
                     onChange={(event, newValue) => handleSliderOnChange(event, newValue)}
-                    valueLabelDisplay="auto"
                     step={100}
                     min={sliderIterTMin}
                     max={sliderIterTMax}
