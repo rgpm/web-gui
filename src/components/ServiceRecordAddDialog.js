@@ -35,6 +35,9 @@ const useStyles = makeStyles(theme => ({
   },
   dialogPaper: {
     padding: theme.spacing(2)
+  },
+  textField: {
+    marginTop: theme.spacing(2)
   }
 }));
 
@@ -139,9 +142,9 @@ export default function ServiceRecordList(props) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Grid container direction="column">
-                <TextField label="Record Name" onChange={(event) => setName(event.target.value)} helperText="The friendly name of the record"/>
-                <TextField label="Locator"onChange={(event) => setLocator(event.target.value)} helperText="The URL of the service"/>
-                <TextField label="Identifier" onChange={(event) => setIdentifier(event.target.value)} helperText="The username for the service"/>
+                <TextField className={classes.textField} label="Record Name" onChange={(event) => setName(event.target.value)} helperText="The friendly name of the record"/>
+                <TextField className={classes.textField} label="Locator"onChange={(event) => setLocator(event.target.value)} helperText="The URL of the service"/>
+                <TextField className={classes.textField} label="Identifier" onChange={(event) => setIdentifier(event.target.value)} helperText="The username for the service"/>
                 <div>
                   <br/>
                   <Typography variant="h6">Iteration Count</Typography>
