@@ -48,7 +48,7 @@ export default function HelpDialog(props) {
       </DialogContent>
       <DialogContent>
         <DialogContentText>
-          More information can be found at: <a target="_blank" href="https://github.com/rgpm">github.com/rgpm</a>
+          More information can be found at: <a target="_blank" rel="noopener noreferrer" href="https://github.com/rgpm">github.com/rgpm</a>
         </DialogContentText>
       </DialogContent>
 
@@ -85,7 +85,7 @@ export default function HelpDialog(props) {
       
       <DialogContent>
         <DialogContentText>
-          <img src="tutorial/how_it_works.svg"/>
+          <img src="tutorial/how_it_works.svg" alt="Shows components used to generate the password"/>
           <br/>
 
           RGPM stores information about each service that you save a password for. This
