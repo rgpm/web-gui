@@ -7,7 +7,6 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import { Typography, makeStyles, Grid, Tooltip } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import HistoryIcon from '@material-ui/icons/History';
 import UpdateIcon from '@material-ui/icons/Update';
 import {isMobile} from 'react-device-detect';
@@ -139,7 +138,6 @@ export default function ServiceRecordList(props) {
       alignItems="center"
       className={classes.grid}
     >
-      <HelpOutlineIcon className={classes.infoIcon}/>
       <Typography className={classes.infoMessage}>Use the add button below to get started!</Typography>
     </Grid>
     );
