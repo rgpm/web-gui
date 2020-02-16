@@ -42,9 +42,7 @@ export default function PasswordTextField(props) {
             item 
           >
             <Tooltip arrow title={"Copy to Clipboard"} >
-              <IconButton  edge="end" onClick={copyPassword}>
-                <FileCopyIcon/>
-              </IconButton>
+              <FileCopyIcon/>
             </Tooltip>      
           </Grid>
           <Grid 
