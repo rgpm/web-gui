@@ -45,8 +45,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function ServiceRecordList(props) {
 
-  function handleDialogOnClose() {
-    props.closeHandler();
+  function handleDialogOnClose(pass) {
+    props.closeHandler(pass);
   }
   
   const [name, setName] = React.useState("");
@@ -96,10 +96,11 @@ export default function ServiceRecordList(props) {
       password,
       defaultPRML
     ).then((new_record) => {
-      console.log(new_record);
       props.onListUpdate();
       setPasswordDialogOpen(false);
-      handleDialogOnClose();
+      rgpm.genPass(new_record, password).then((pass) => {
+        handleDialogOnClose(pass);
+      });
     });
   }
 
