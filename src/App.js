@@ -9,7 +9,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import ServiceRecordAddDialog from './components/ServiceRecordAddDialog';
 import MasterPasswordInput from './components/MasterPasswordInput';
-import { AppBar, Toolbar, IconButton, Tooltip } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Tooltip, LinearProgress } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import PasswordTextField from './components/PasswordTextField';
@@ -45,11 +45,11 @@ const useStyles = makeStyles(theme => ({
 export default function App() {
 
   const rgpm = new rgpmlib();
-  let timeoutHandle = null;
+  const [timeoutHandle, setTimeoutHandle] = React.useState(null);
+  const [countdownHandle, setCountdownHandle] = React.useState(null);
   const [activeStep, setActiveStep] = React.useState(0);
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
   const [helpDialogOpen, setHelpDialogOpen] = React.useState(false);
-
   const records = rgpm.listRecords();
   const [record_uuids, setRecordUUIDS] = React.useState(records !== null ? records["records"] : null);
   const [current_record_uuid, setCurrentRecordUUID] = React.useState(null);
@@ -58,6 +58,7 @@ export default function App() {
   const [backArrowVisibleStatus, setBackArrowVisibleStatus] = React.useState(false);
   const [generatePrevPassword, setGeneratePrevPassword] = React.useState(false); 
   const [generateNextPassword, setGenerateNextPassword] = React.useState(false); 
+  const [countdownValue, setCountdownValue] = React.useState(0);
 
   if(JSON.parse(window.localStorage.getItem("firstTimeLoad")) == null) {
     setHelpDialogOpen(true);
@@ -82,7 +83,9 @@ export default function App() {
     //Clear the timeout if there is one
     if(timeoutHandle !== null) {
       clearTimeout(timeoutHandle);
-      timeoutHandle = null;
+      clearInterval(countdownHandle);
+      setTimeoutHandle(null);
+      setCountdownHandle(null);
     }
     
 
@@ -153,16 +156,31 @@ export default function App() {
 
   function displayPassword() {
     //Setup timer to return to normal page
-    timeoutHandle = setTimeout(() => {
-      handleStep(0);
-    }, 10000);
+    console.log(timeoutHandle);
+    console.log(countdownHandle);
+    if(timeoutHandle === null) {
+      setTimeoutHandle(setTimeout(() => {
+        handleStep(0);
+      }, 10000));
 
+      let countdown = 0;
+      var intervalID = setInterval(() => {
+        setCountdownValue(countdown);
+        countdown = countdown + 1;
+        if(countdown == 10) {
+          clearInterval(intervalID);
+        }
+      }, 1000);
+      setCountdownHandle(intervalID);
+    }
+    
     // If we are generating the previous password, then show that
     if(generatePrevPassword) {
       return (<div>
                 <Typography>Below is the previous revision of the password:</Typography>
                 <Typography>Old Revision:</Typography>
                 <PasswordTextField text={previousGenPass}/>
+                <LinearProgress variant="determinate" value={countdownValue * 10} />
               </div>);
     }
 
@@ -179,7 +197,11 @@ export default function App() {
     }
 
     // Just show the current password
-    return (<div><Typography>Generated Password:</Typography><PasswordTextField text={currentGenPass}/></div>);
+    return (<div>
+              <Typography>Generated Password:</Typography>
+              <PasswordTextField text={currentGenPass}/>
+              <LinearProgress variant="determinate" value={countdownValue * 10} />
+            </div>);
   }
 
   return (
