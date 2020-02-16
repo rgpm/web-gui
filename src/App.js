@@ -155,7 +155,20 @@ export default function App() {
 
 
   function displayPassword() {
-    //Setup timer to return to normal page
+
+    // If we are generating the next password, show the previous and the new one
+    if(generateNextPassword) {
+      return (<div>
+        <Typography>Be sure to change your password to the new password:</Typography>
+        <Typography>Old Revision:</Typography>
+        <PasswordTextField text={previousGenPass}/>
+        <br/>
+        <Typography>New Revision:</Typography>
+        <PasswordTextField text={currentGenPass}/>
+      </div>);
+    }
+
+    //Setup timer to return to normal page. This is only for prev/current password generation
     if(timeoutHandle === null) {
       setTimeoutHandle(setTimeout(() => {
         handleStep(0);
@@ -181,18 +194,6 @@ export default function App() {
                 <Typography>Timeout:</Typography>
                 <LinearProgress variant="determinate" value={countdownValue} color="secondary" />
               </div>);
-    }
-
-    // If we are generating the next password, show the previous and the new one
-    if(generateNextPassword) {
-      return (<div>
-        <Typography>Be sure to change your password to the new password:</Typography>
-        <Typography>Old Revision:</Typography>
-        <PasswordTextField text={previousGenPass}/>
-        <br/>
-        <Typography>New Revision:</Typography>
-        <PasswordTextField text={currentGenPass}/>
-      </div>);
     }
 
     // Just show the current password
