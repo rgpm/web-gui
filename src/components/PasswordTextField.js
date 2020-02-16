@@ -11,6 +11,9 @@ import Snackbar from '@material-ui/core/Snackbar';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
+  },
+  text: { 
+    textTransform: "none"
   }
 }));
 
@@ -50,7 +53,7 @@ export default function PasswordTextField(props) {
             zeroMinWidth
           >
             
-              <Typography noWrap>{props.text}</Typography>
+              <Typography className={classes.text} noWrap>{props.text}</Typography>
             
           </Grid>
         </Grid>
