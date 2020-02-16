@@ -70,8 +70,12 @@ export default function App() {
     setCurrentRecordUUID(uuid);
   }
 
-  function handleDialogOnClose() {
+  function handleDialogOnClose(pass) {
     setAddDialogOpen(false);
+    if(pass !== null) {
+      setCurrentGenPass(pass);
+      handleStep(2);
+    }
   }
 
   function handleAddButtonOnClick() {
