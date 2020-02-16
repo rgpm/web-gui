@@ -45,6 +45,7 @@ const useStyles = makeStyles(theme => ({
 export default function App() {
 
   const rgpm = new rgpmlib();
+  let timeoutHandle = null;
   const [activeStep, setActiveStep] = React.useState(0);
   const [addDialogOpen, setAddDialogOpen] = React.useState(false);
   const [helpDialogOpen, setHelpDialogOpen] = React.useState(false);
@@ -78,6 +79,13 @@ export default function App() {
   }
 
   function handleStep(step) {
+    //Clear the timeout if there is one
+    if(timeoutHandle !== null) {
+      clearTimeout(timeoutHandle);
+      timeoutHandle = null;
+    }
+    
+
     setActiveStep(step);
     if(step !== 0) {
       setBackArrowVisibleStatus(true);
@@ -144,6 +152,11 @@ export default function App() {
 
 
   function displayPassword() {
+    //Setup timer to return to normal page
+    timeoutHandle = setTimeout(() => {
+      handleStep(0);
+    }, 10000);
+
     // If we are generating the previous password, then show that
     if(generatePrevPassword) {
       return (<div>
