@@ -156,8 +156,6 @@ export default function App() {
 
   function displayPassword() {
     //Setup timer to return to normal page
-    console.log(timeoutHandle);
-    console.log(countdownHandle);
     if(timeoutHandle === null) {
       setTimeoutHandle(setTimeout(() => {
         handleStep(0);
@@ -166,8 +164,8 @@ export default function App() {
       let countdown = 0;
       var intervalID = setInterval(() => {
         setCountdownValue(countdown);
-        countdown = countdown + 1;
-        if(countdown == 10) {
+        countdown = countdown + 10;
+        if(countdown === 100) {
           clearInterval(intervalID);
         }
       }, 1000);
@@ -180,7 +178,8 @@ export default function App() {
                 <Typography>Below is the previous revision of the password:</Typography>
                 <Typography>Old Revision:</Typography>
                 <PasswordTextField text={previousGenPass}/>
-                <LinearProgress variant="determinate" value={countdownValue * 10} />
+                <Typography>Timeout:</Typography>
+                <LinearProgress variant="determinate" value={countdownValue} color="secondary" />
               </div>);
     }
 
@@ -200,7 +199,8 @@ export default function App() {
     return (<div>
               <Typography>Generated Password:</Typography>
               <PasswordTextField text={currentGenPass}/>
-              <LinearProgress variant="determinate" value={countdownValue * 10} />
+              <Typography>Timeout:</Typography>
+              <LinearProgress variant="determinate" value={countdownValue} color="secondary" />
             </div>);
   }
 
