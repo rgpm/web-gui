@@ -93,7 +93,7 @@ export default function ServiceRecordList(props) {
       locator,
       identifier,
       iter_t,
-      "master password????",
+      password,
       defaultPRML
     ).then((new_record) => {
       console.log(new_record);
