@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import Grid from '@material-ui/core/Grid';
-import { IconButton, Tooltip, Paper, Button } from '@material-ui/core';
+import { Tooltip, Paper, Button } from '@material-ui/core';
 import Snackbar from '@material-ui/core/Snackbar';
 
 
