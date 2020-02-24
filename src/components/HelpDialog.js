@@ -120,7 +120,7 @@ export default function HelpDialog(props) {
       </DialogContent>
 
       <DialogTitle>
-        Icon Explaination
+        Icon Explanation
       </DialogTitle>
       <DialogContent>
         <Grid 
