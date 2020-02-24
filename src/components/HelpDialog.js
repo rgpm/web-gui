@@ -4,8 +4,9 @@ import FileCopyIcon from '@material-ui/icons/FileCopy';
 import DeleteIcon from '@material-ui/icons/Delete';
 import HistoryIcon from '@material-ui/icons/History';
 import UpdateIcon from '@material-ui/icons/Update';
+import CloseIcon from '@material-ui/icons/Close';
 import Grid from '@material-ui/core/Grid';
-import { Paper, Dialog, DialogTitle, DialogContent, DialogContentText } from '@material-ui/core';
+import { Paper, Dialog, DialogTitle, DialogContent, DialogContentText, IconButton, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -20,20 +21,29 @@ const useStyles = makeStyles(theme => ({
   },
   iconText: {
     paddingLeft: theme.spacing(1)
+  },
+  buttonGrid : {
+    direction: "row",
+    justify: "center",
+    alignItems: "center",
+    padding: theme.spacing(2)
   }
 }));
 
 export default function HelpDialog(props) {
+
+  function handleDialogOnClose() {
+    props.onClose();
+  }
 
   const classes = useStyles();
   return (
     <Dialog open={props.open} maxWidth={"md"} fullWidth onClose={props.onClose}>
       <Paper>
       <DialogTitle>
-        RGPM Walk-Through
-      </DialogTitle>
-
-      <DialogTitle>
+        <IconButton edge="start" color="inherit" onClick={handleDialogOnClose} aria-label="close">
+          <CloseIcon />
+        </IconButton>
         What is RGPM?
       </DialogTitle>
       <DialogContent>
@@ -156,6 +166,12 @@ export default function HelpDialog(props) {
           <Typography className={classes.iconText}>Create a new revision of the password</Typography>
           </Grid>
         </DialogContent>    
+        
+        <Grid container className={classes.buttonGrid}>
+          <Button variant="contained" color="primary" onClick={handleDialogOnClose}>
+            Close Dialog
+          </Button>
+        </Grid>
       </Paper>
     </Dialog>
   );
