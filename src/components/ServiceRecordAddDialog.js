@@ -120,10 +120,10 @@ export default function ServiceRecordList(props) {
   const classes = useStyles();
     
   return (
-    <Dialog fullScreen open={props.open} onClose={handleDialogOnClose}>
+    <Dialog fullScreen open={props.open} onClose={() => handleDialogOnClose(null)}>
       <AppBar className={classes.dialogAppBar}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={handleDialogOnClose} aria-label="close">
+          <IconButton edge="start" color="inherit" onClick={() => handleDialogOnClose(null)} aria-label="close">
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.dialogTitle}>
@@ -143,9 +143,9 @@ export default function ServiceRecordList(props) {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <Grid container direction="column">
-                <TextField className={classes.textField} label="Record Name" onChange={(event) => setName(event.target.value)} helperText="The friendly name of the record"/>
-                <TextField className={classes.textField} label="Locator"onChange={(event) => setLocator(event.target.value)} helperText="The URL of the service"/>
-                <TextField className={classes.textField} label="Identifier" onChange={(event) => setIdentifier(event.target.value)} helperText="The username for the service"/>
+                <TextField className={classes.textField} label="Record Name" onChange={(event) => setName(event.target.value)} helperText="The friendly name of the record, e.g. Google"/>
+                <TextField className={classes.textField} label="Locator"onChange={(event) => setLocator(event.target.value)} helperText="The address (URL) of the service, e.g. www.google.com"/>
+                <TextField className={classes.textField} label="Identifier" onChange={(event) => setIdentifier(event.target.value)} helperText="Your username for the service, e.g. example@gmail.com"/>
                 <div>
                   <br/>
                   <Typography variant="h6">Iteration Count</Typography>
