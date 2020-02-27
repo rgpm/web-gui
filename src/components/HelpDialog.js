@@ -52,13 +52,13 @@ export default function HelpDialog(props) {
           store your passwords. Instead, RGPM recreates your passwords each time you 
           need them.
           
-          RGPM was created to research participants understanding and usage of
+          RGPM was created to research participants' understanding and usage of
           generative password managers.
         </DialogContentText>
       </DialogContent>
       <DialogContent>
         <DialogContentText>
-          More information can be found at: <a target="_blank" rel="noopener noreferrer" href="https://github.com/rgpm">github.com/rgpm</a>
+          More information can be found at: <a target="_blank" rel="noopener noreferrer" href="https://github.com/rgpm">github.com/rgpm</a>. The below information is adapted from the Kevin Schmittle's thesis. The original information can be found at <a target="_blank" rel="noopener noreferrer" href="https://www.cs.nmt.edu/~kschmittle/rgpm/">https://www.cs.nmt.edu/~kschmittle/rgpm/</a>
         </DialogContentText>
       </DialogContent>
 
@@ -99,7 +99,7 @@ export default function HelpDialog(props) {
           <br/>
 
           RGPM stores information about each service that you save a password for. This
-          information includes the service name (e.g. https://example.com), your username,
+          information includes the service name (e.g., https://example.com), your username,
           and other information used to create your password.
 
           This information is combined with a master password that you choose, creating a
@@ -166,10 +166,10 @@ export default function HelpDialog(props) {
           <Typography className={classes.iconText}>Create a new revision of the password</Typography>
           </Grid>
         </DialogContent>    
-        
+
         <Grid container className={classes.buttonGrid}>
           <Button variant="contained" color="primary" onClick={handleDialogOnClose}>
-            Close Dialog
+            Close Window
           </Button>
         </Grid>
       </Paper>
